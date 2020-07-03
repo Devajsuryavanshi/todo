@@ -99,3 +99,11 @@ def completedtodos(request):
     todos = Todo.objects.filter(user = request.user, completedTime__isnull = False).order_by('-completedTime')
     return render(request, 'todo/completedtodos.html', {'todos': todos})
         
+def search(request):
+    if request.method == 'GET':
+        m = request.GET.get("searched")
+        searchedtodo = Todo.objects.filter(user = request.user, title__icontains = m)
+        if searchedtodo.exists():
+            return render(request, 'todo/searched.html', {'todo':searchedtodo})
+        else:
+            return render(request, 'todo/searched.html', {'error':"not found"})
